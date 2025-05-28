@@ -80,7 +80,8 @@ const typeWriter = () => {
 };
 setTimeout(typeWriter, 1000);
 
-// Particle Network Animation
+// Particle Network Animation (Disabled on Mobile)
+const isMobile = window.innerWidth <= 768;
 const canvas = document.getElementById('particle-network');
 const ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
@@ -114,77 +115,46 @@ class Particle {
     }
 }
 
-for (let i = 0; i < particleCount; i++) {
-    particles.push(new Particle());
-}
+if (!isMobile) {
+    for (let i = 0; i < particleCount; i++) {
+        particles.push(new Particle());
+    }
 
-function drawLines() {
-    for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-            const dx = particles[i].x - particles[j].x;
-            const dy = particles[i].y - particles[j].y;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-            if (distance < 100) {
-                ctx.beginPath();
-                ctx.moveTo(particles[i].x, particles[i].y);
-                ctx.lineTo(particles[j].x, particles[j].y);
-                ctx.strokeStyle = `rgba(37, 99, 235, ${1 - distance / 100})`;
-                ctx.lineWidth = 1;
-                ctx.stroke();
+    function drawLines() {
+        for (let i = 0; i < particles.length; i++) {
+            for (let j = i + 1; j < particles.length; j++) {
+                const dx = particles[i].x - particles[j].x;
+                const dy = particles[i].y - particles[j].y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                if (distance < 100) {
+                    ctx.beginPath();
+                    ctx.moveTo(particles[i].x, particles[i].y);
+                    ctx.lineTo(particles[j].x, particles[j].y);
+                    ctx.strokeStyle = `rgba(37, 99, 235, ${1 - distance / 100})`;
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                }
             }
         }
     }
-}
 
-function animateParticles() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    particles.forEach(particle => {
-        particle.update();
-        particle.draw();
-    });
-    drawLines();
-    requestAnimationFrame(animateParticles);
-}
-
-window.addEventListener('resize', () => {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-});
-
-animateParticles();
-
-// Mouse Trail Effect
-const hero = document.querySelector('.hero');
-const trails = [];
-const trailLength = 10;
-
-document.addEventListener('mousemove', (e) => {
-    if (e.target.closest('.hero')) {
-        const trail = document.createElement('div');
-        trail.className = 'mouse-trail';
-        trail.style.left = `${e.clientX}px`;
-        trail.style.top = `${e.clientY}px`;
-        document.body.appendChild(trail);
-        trails.push(trail);
-
-        if (trails.length > trailLength) {
-            const oldTrail = trails.shift();
-            oldTrail.remove();
-        }
+    function animateParticles() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(particle => {
+            particle.update();
+            particle.draw();
+        });
+        drawLines();
+        requestAnimationFrame(animateParticles);
     }
-});
 
-// Ripple Effect for Social Links
-document.querySelectorAll('.social-link').forEach(link => {
-    link.addEventListener('click', function (e) {
-        const ripple = this.querySelector('.ripple');
-        ripple.style.left = `${e.offsetX}px`;
-        ripple.style.top = `${e.offsetY}px`;
-        ripple.style.animation = 'none';
-        ripple.offsetHeight; // Trigger reflow
-        ripple.style.animation = 'ripple 0.6s linear';
+    window.addEventListener('resize', () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
     });
-});
+
+    animateParticles();
+}
 
 // Particle Animation (Existing)
 const createParticle = () => {
@@ -217,10 +187,28 @@ mobileMenu.addEventListener('click', () => {
     mobileMenu.classList.toggle('active');
 });
 
+// Back to Top Button
+const backToTop = document.querySelector('.back-to-top');
+window.addEventListener('scroll', () => {
+    if (window.pageYOffset > 300) {
+        backToTop.classList.add('visible');
+    } else {
+        backToTop.classList.remove('visible');
+    }
+});
+backToTop.addEventListener('click', () => {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+});
+
 // Project Card Hover Effects
 document.querySelectorAll('.project-card').forEach(card => {
     card.addEventListener('mouseenter', function () {
-        this.style.transform = 'translateY(-10px) scale(1.02)';
+        if (!isMobile) {
+            this.style.transform = 'translateY(-10px) scale(1.02)';
+        }
     });
     card.addEventListener('mouseleave', function () {
         this.style.transform = 'translateY(0) scale(1)';
@@ -338,13 +326,17 @@ document.querySelector('form.contact-form').addEventListener('submit', async fun
         button.style.background = '#ef4444';
         setTimeout(() => {
             button.innerHTML = originalText;
+            button.disabled = false;
             button.style.background = '';
+            button.style.cursor = '';
         }, 5000);
         return;
     }
 
     button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+    button.disabled = true;
     button.style.background = '#6b7280';
+    button.style.cursor = 'not-allowed';
 
     try {
         const formData = new FormData(this);
@@ -363,7 +355,21 @@ document.querySelector('form.contact-form').addEventListener('submit', async fun
         button.style.background = '#ef4444';
         setTimeout(() => {
             button.innerHTML = originalText;
+            button.disabled = false;
             button.style.background = '';
+            button.style.cursor = '';
         }, 5000);
     }
+});
+
+// Ripple Effect for Social Links (Footer Only)
+document.querySelectorAll('.social-link').forEach(link => {
+    link.addEventListener('click', function (e) {
+        const ripple = this.querySelector('.ripple');
+        ripple.style.left = `${e.offsetX}px`;
+        ripple.style.top = `${e.offsetY}px`;
+        ripple.style.animation = 'none';
+        ripple.offsetHeight; // Trigger reflow
+        ripple.style.animation = 'ripple 0.6s linear';
+    });
 });
