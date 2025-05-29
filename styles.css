@@ -38,6 +38,7 @@ body {
     background: var(--bg-primary);
     color: var(--text-primary);
     overflow-x: hidden;
+    line-height: 1.5;
 }
 
 ::-webkit-scrollbar {
@@ -135,14 +136,18 @@ body {
     display: none;
     flex-direction: column;
     cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0.5rem;
 }
 
 .mobile-menu span {
-    width: 25px;
-    height: 3px;
+    width: 30px;
+    height: 4px;
     background: var(--text-primary);
-    margin: 3px 0;
+    margin: 4px 0;
     transition: all 0.3s ease;
+    border-radius: 2px;
 }
 
 .theme-toggle {
@@ -409,6 +414,11 @@ body {
     color: var(--text-secondary);
 }
 
+.about-text .btn-primary {
+    margin-top: 1.5rem;
+    display: inline-block;
+
+}
 .stats {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -880,9 +890,11 @@ body {
         padding-top: 2rem;
         transition: left 0.3s ease, opacity 0.3s ease;
         opacity: 0;
+        z-index: 999;
     }
 
     .nav-links.active {
+        display: flex;
         left: 0;
         opacity: 1;
     }
@@ -892,16 +904,36 @@ body {
     }
 
     .nav-links a {
-        font-size: 1.2rem;
+        font-size: 1.5rem;
         padding: 0.5rem 1rem;
+        color: var(--text-primary);
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+        color: var(--primary);
     }
 
     .mobile-menu {
         display: flex;
+        flex-direction: column;
+        cursor: pointer;
+        background: none;
+        border: none;
+        padding: 0.5rem;
+    }
+
+    .mobile-menu span {
+        width: 30px;
+        height: 4px;
+        background: var(--text-primary);
+        margin: 4px 0;
+        transition: all 0.3s ease;
+        border-radius: 2px;
     }
 
     .mobile-menu.active span:nth-child(1) {
-        transform: rotate(-45deg) translate(-5px, 6px);
+        transform: rotate(-45deg) translate(-6px, 6px);
     }
 
     .mobile-menu.active span:nth-child(2) {
@@ -909,7 +941,7 @@ body {
     }
 
     .mobile-menu.active span:nth-child(3) {
-        transform: rotate(45deg) translate(-5px, -6px);
+        transform: rotate(45deg) translate(-6px, -6px);
     }
 
     .hero {
@@ -919,15 +951,15 @@ body {
     }
 
     .hero-title {
-        font-size: 2rem;
+        font-size: 2.5rem;
     }
 
     .hero-subtitle {
-        font-size: 1rem;
+        font-size: 1.2rem;
     }
 
     .hero-description {
-        font-size: 0.9rem;
+        font-size: 1rem;
     }
 
     .cta-buttons {
@@ -982,7 +1014,7 @@ body {
     }
 
     .section-title {
-        font-size: 1.8rem;
+        font-size: 2rem;
     }
 
     .form-group input,
