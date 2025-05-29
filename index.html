@@ -3,41 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KCA</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <meta name="description" content="Portfolio of Kent Carlo B. Amante, Electronics and Communications Engineering graduate specializing in embedded systems and IoT.">
+    <meta name="keywords" content="software engineering, electronics engineering, C++, Java, Python, HTML, CSS, JavaScript, embedded systems, IoT, portfolio, Kent Carlo Amante">
+    <meta name="author" content="Kent Carlo B. Amante">
+    <title>Kent Carlo B. Amante - Portfolio</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
 </head>
 <body>
     <nav class="navbar" id="navbar">
         <div class="nav-container">
-            <div class="logo">KCA</div>
+            <a href="#home" class="logo">KCA</a>
             <ul class="nav-links">
-                <li><a href="#hero" class="nav-link active">Home</a></li>
+                <li><a href="#home" class="nav-link">Home</a></li>
                 <li><a href="#about" class="nav-link">About</a></li>
                 <li><a href="#skills" class="nav-link">Skills</a></li>
                 <li><a href="#projects" class="nav-link">Projects</a></li>
                 <li><a href="#contact" class="nav-link">Contact</a></li>
             </ul>
-            <button class="theme-toggle"><i class="fas fa-moon"></i></button>
-            <div class="mobile-menu">
+            <button class="mobile-menu" aria-label="Toggle navigation menu" aria-expanded="false">
                 <span></span>
                 <span></span>
                 <span></span>
-            </div>
+            </button>
+            <button class="theme-toggle" aria-label="Toggle theme">
+                <i class="fas fa-moon"></i>
+            </button>
         </div>
     </nav>
 
-    <section class="hero" id="hero">
+    <section id="home" class="hero scroll-reveal">
         <canvas id="particle-network"></canvas>
-        <div class="hero-content scroll-reveal">
+        <div class="hero-content">
             <h1 class="hero-title">Kent Carlo B. Amante</h1>
             <h2 class="hero-subtitle">Electronics & Communications Engineering Graduate</h2>
             <p class="hero-description">
-                Results-driven Electronics and Communications Engineering graduate seeking an opportunity to apply
-                technical knowledge and hands-on experience in embedded systems, microcontroller programming, and
-                circuit design. Passionate about developing innovative, real-world solutions in electronics, IoT, or
-                IT-related fields. Demonstrates strong problem-solving skills, adaptability, and a collaborative mindset
-                to contribute effectively to dynamic engineering environments.
+                Electronics Engineering graduate and aspiring software engineer with hands-on experience in C++ (Arduino projects), Java (application development), Python (API testing and automation), and web development (HTML, CSS, JavaScript for ESP32 interfaces). Passionate about building innovative software solutions and thriving in collaborative, dynamic teams.
             </p>
             <div class="cta-buttons">
                 <a href="#projects" class="btn btn-primary"><i class="fas fa-code"></i> View Projects</a>
@@ -51,29 +53,21 @@
         </div>
     </section>
 
-    <section class="section about scroll-reveal" id="about">
+    <section id="about" class="section about scroll-reveal">
         <h2 class="section-title">About Me</h2>
         <div class="about-content">
             <div class="about-image">
-                <img src="kent.jpg" alt="Kent Carlo Amante" class="profile-img" loading="lazy">
+                <img src="kent.jpg" alt="Kent Carlo Amante portrait" class="profile-img" loading="lazy">
             </div>
             <div class="about-text">
-                <p>
-                    I'm a recent Electronics and Communications Engineering graduate with a passion for creating
-                    innovative solutions in embedded systems and IoT. My academic journey has equipped me with
-                    fundamental knowledge in circuit design, microcontroller programming, and communication protocols.
-                </p>
-                <p>
-                    Through coursework and hands-on projects, I've gained familiarity with programming languages like
-                    Python, C++, Java, HTML, CSS, and JavaScript. I'm particularly enthusiastic about working with
-                    Arduino and ESP32 microcontrollers to develop practical solutions that integrate hardware and
-                    software seamlessly.
-                </p>
+                <p>I'm a dedicated Electronics and Communications Engineering graduate transitioning to software engineering, with a passion for building innovative software solutions.</p>
+                <p>I have hands-on experience with C++ (Arduino projects), Java (thesis app development), Python (API testing and automation), and web development (HTML, CSS, JavaScript for ESP32 interfaces). I’m eager to contribute to software engineering projects in dynamic, collaborative teams.</p>
+                <a href="resume.pdf" class="btn btn-primary" download><i class="fas fa-file-download"></i> Download Resume</a>
             </div>
         </div>
         <div class="stats">
             <div class="stat-item">
-                <h3>4</h3>
+                <h3>4+</h3>
                 <p>GitHub Projects</p>
             </div>
             <div class="stat-item">
@@ -81,13 +75,13 @@
                 <p>Graduate</p>
             </div>
             <div class="stat-item">
-                <h3>Programming & IoT</h3>
+                <h3>IoT & Programming</h3>
                 <p>Enthusiast</p>
             </div>
         </div>
     </section>
 
-    <section class="section skills scroll-reveal" id="skills">
+    <section id="skills" class="section skills scroll-reveal">
         <h2 class="section-title">Skills & Technologies</h2>
         <div class="skills-grid">
             <div class="skill-category">
@@ -110,7 +104,7 @@
                 </div>
             </div>
             <div class="skill-category">
-                <h3><i class="fas fa-code"></i> Familiarity with Programming Languages</h3>
+                <h3><i class="fas fa-code"></i> Programming Languages</h3>
                 <div class="skill-list">
                     <span class="skill-item">C++</span>
                     <span class="skill-item">Python</span>
@@ -125,7 +119,7 @@
                 <div class="skill-list">
                     <span class="skill-item">Arduino IDE</span>
                     <span class="skill-item">Git/GitHub</span>
-                    <span class="skill-item">CAD for Electronics (Basic)</span>
+                    <span class="skill-item">CAD for Electronics</span>
                     <span class="skill-item">Circuit Troubleshooting</span>
                     <span class="skill-item">Web Development</span>
                 </div>
@@ -133,7 +127,7 @@
         </div>
     </section>
 
-    <section class="section projects scroll-reveal" id="projects">
+    <section id="projects" class="section projects scroll-reveal">
         <h2 class="section-title">Featured Projects</h2>
         <div class="project-filters">
             <button class="filter-btn active" data-filter="all">All</button>
@@ -143,13 +137,10 @@
         </div>
         <div class="projects-grid">
             <div class="project-card">
-                <div class="project-image"><i class="fas fa-microchip"></i></div>
+                <div class="project-image"><i class="fas fa-tv"></i></div>
                 <div class="project-content">
                     <h3 class="project-title">ESP32 Web-Based IR Remote Control</h3>
-                    <p class="project-description">
-                        A web interface for capturing, managing, and sending IR signals using an ESP32. Features include
-                        responsive design, IR signal storage, and remote control via a web browser.
-                    </p>
+                    <p class="project-description">Developed a responsive web interface using HTML, CSS, and JavaScript, integrated with C++ firmware on ESP32 for capturing, managing, and sending IR signals.</p>
                     <div class="project-tech">
                         <span class="tech-tag">ESP32</span>
                         <span class="tech-tag">IR Communication</span>
@@ -157,18 +148,15 @@
                         <span class="tech-tag">HTML</span>
                     </div>
                     <div class="project-links">
-                        <a href="#" class="project-link primary"><i class="fab fa-github"></i> GitHub</a>
+                        <a href="https://github.com/Skca01/esp32-ir-remote" class="project-link primary"><i class="fab fa-github"></i> GitHub</a>
                     </div>
                 </div>
             </div>
             <div class="project-card">
-                <div class="project-image"><i class="fas fa-wifi"></i></div>
+                <div class="project-image"><i class="fas fa-comment-alt"></i></div>
                 <div class="project-content">
                     <h3 class="project-title">ESP32 LoRa Chat</h3>
-                    <p class="project-description">
-                        A web-based chat application using ESP32 and LoRa communication for long-range wireless
-                        messaging.
-                    </p>
+                    <p class="project-description">A web-based chat application using ESP32 and LoRa for long-range wireless messaging.</p>
                     <div class="project-tech">
                         <span class="tech-tag">ESP32</span>
                         <span class="tech-tag">LoRa</span>
@@ -176,7 +164,7 @@
                         <span class="tech-tag">HTML</span>
                     </div>
                     <div class="project-links">
-                        <a href="#" class="project-link primary"><i class="fab fa-github"></i> GitHub</a>
+                        <a href="https://github.com/Skca01/esp32-lora-chat" class="project-link primary"><i class="fab fa-github"></i> GitHub</a>
                     </div>
                 </div>
             </div>
@@ -184,10 +172,7 @@
                 <div class="project-image"><i class="fas fa-network-wired"></i></div>
                 <div class="project-content">
                     <h3 class="project-title">ESP32 UDP Chat</h3>
-                    <p class="project-description">
-                        A real-time chat application using ESP32, featuring both WebSocket and UDP communication
-                        protocols with a modern, responsive web interface.
-                    </p>
+                    <p class="project-description">A real-time chat application using ESP32, featuring WebSocket and UDP protocols with a responsive web interface.</p>
                     <div class="project-tech">
                         <span class="tech-tag">ESP32</span>
                         <span class="tech-tag">WebSocket</span>
@@ -196,7 +181,7 @@
                         <span class="tech-tag">HTML</span>
                     </div>
                     <div class="project-links">
-                        <a href="#" class="project-link primary"><i class="fab fa-github"></i> GitHub</a>
+                        <a href="https://github.com/Skca01/esp32-udp-chat" class="project-link primary"><i class="fab fa-github"></i> GitHub</a>
                     </div>
                 </div>
             </div>
@@ -204,23 +189,20 @@
                 <div class="project-image"><i class="fas fa-sitemap"></i></div>
                 <div class="project-content">
                     <h3 class="project-title">Star Topology with ESP-NOW</h3>
-                    <p class="project-description">
-                        A star topology communication system using the ESP-NOW protocol, where multiple transmitter
-                        nodes send data to a single receiver hub in a unidirectional manner.
-                    </p>
+                    <p class="project-description">A star topology communication system using ESP-NOW, with multiple transmitter nodes sending data to a single receiver hub.</p>
                     <div class="project-tech">
                         <span class="tech-tag">ESP-NOW</span>
                         <span class="tech-tag">C++</span>
                     </div>
                     <div class="project-links">
-                        <a href="#" class="project-link primary"><i class="fab fa-github"></i> GitHub</a>
+                        <a href="https://github.com/Skca01/esp-now-star" class="project-link primary"><i class="fab fa-github"></i> GitHub</a>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="section contact scroll-reveal" id="contact">
+    <section id="contact" class="section contact scroll-reveal">
         <h2 class="section-title">Let's Connect</h2>
         <div class="contact-content">
             <div class="contact-info">
@@ -246,7 +228,7 @@
                     </div>
                 </div>
             </div>
-            <form class="contact-form">
+            <form class="contact-form" action="https://api.web3forms.com/submit" method="POST">
                 <input type="hidden" name="access_key" value="49351472-77ab-40f1-8a2b-d4eb566f6169">
                 <div class="form-group">
                     <label for="name">Full Name</label>
@@ -271,16 +253,15 @@
 
     <footer class="footer">
         <div class="social-links">
-            <a href="mailto:carloamante125@gmail.com" class="social-link"><i class="fas fa-envelope"></i><span class="ripple"></span></a>
-            <a href="https://facebook.com/carlo.amante.37" class="social-link"><i class="fab fa-facebook"></i><span class="ripple"></span></a>
-            <a href="https://github.com/Skca01" class="social-link"><i class="fab fa-github"></i><span class="ripple"></span></a>
+            <a href="https://facebook.com/carlo.amante.37" class="social-link" aria-label="Facebook"><i class="fab fa-facebook-f"></i><span class="ripple"></span></a>
+            <a href="https://github.com/Skca01" class="social-link" aria-label="GitHub"><i class="fab fa-github"></i><span class="ripple"></span></a>
         </div>
-        <p>© 2025 Kent Carlo B. Amante. All rights reserved. | Designed with ❤️ for innovation</p>
+        <p>© 2025 Kent Carlo B. Amante. All rights reserved. | Designed with <i class="fas fa-heart"></i> for innovation</p>
     </footer>
 
     <button class="back-to-top" aria-label="Back to top"><i class="fas fa-chevron-up"></i></button>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/validate.js/0.13.1/validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/validate.js@0.13.1/validate.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
