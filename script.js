@@ -68,92 +68,96 @@ document.querySelectorAll('.scroll-reveal').forEach(el => {
 
 // Typewriter Effect
 const subtitle = document.querySelector('.hero-subtitle');
-const text = subtitle.textContent;
-subtitle.textContent = '';
-let i = 0;
-const typeWriter = () => {
-    if (i < text.length) {
-        subtitle.textContent += text.charAt(i);
-        i++;
-        setTimeout(typeWriter, 100);
-    }
-};
-setTimeout(typeWriter, 1000);
+if (subtitle) {
+    const text = subtitle.textContent;
+    subtitle.textContent = '';
+    let i = 0;
+    const typeWriter = () => {
+        if (i < text.length) {
+            subtitle.textContent += text.charAt(i);
+            i++;
+            setTimeout(typeWriter, 100);
+        }
+    };
+    setTimeout(typeWriter, 1000);
+}
 
 // Particle Network Animation (Disabled on Mobile)
 const isMobile = window.innerWidth <= 768;
 const canvas = document.getElementById('particle-network');
-const ctx = canvas.getContext('2d');
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+if (canvas) {
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
 
-const particles = [];
-const particleCount = 50;
+    const particles = [];
+    const particleCount = 50;
 
-class Particle {
-    constructor() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
-        this.vx = (Math.random() - 0.5) * 2;
-        this.vy = (Math.random() - 0.5) * 2;
-        this.radius = 2;
-    }
+    class Particle {
+        constructor() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.vx = (Math.random() - 0.5) * 2;
+            this.vy = (Math.random() - 0.5) * 2;
+            this.radius = 2;
+        }
 
-    draw() {
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        ctx.fillStyle = 'var(--primary)';
-        ctx.fill();
-    }
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+            ctx.fillStyle = 'var(--primary)';
+            ctx.fill();
+        }
 
-    update() {
-        this.x += this.vx;
-        this.y += this.vy;
+        update() {
+            this.x += this.vx;
+            this.y += this.vy;
 
-        if (this.x < 0 || this.x > canvas.width) this.vx = -this.vx;
-        if (this.y < 0 || this.y > canvas.height) this.vy = -this.vy;
-    }
-}
-
-if (!isMobile) {
-    for (let i = 0; i < particleCount; i++) {
-        particles.push(new Particle());
-    }
-
-    function drawLines() {
-        for (let i = 0; i < particles.length; i++) {
-            for (let j = i + 1; j < particles.length; j++) {
-                const dx = particles[i].x - particles[j].x;
-                const dy = particles[i].y - particles[j].y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-                if (distance < 100) {
-                    ctx.beginPath();
-                    ctx.moveTo(particles[i].x, particles[i].y);
-                    ctx.lineTo(particles[j].x, particles[j].y);
-                    ctx.strokeStyle = `rgba(37, 99, 235, ${1 - distance / 100})`;
-                    ctx.lineWidth = 1;
-                    ctx.stroke();
-                }
-            }
+            if (this.x < 0 || this.x > canvas.width) this.vx = -this.vx;
+            if (this.y < 0 || this.y > canvas.height) this.vy = -this.vy;
         }
     }
 
-    function animateParticles() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        particles.forEach(particle => {
-            particle.update();
-            particle.draw();
+    if (!isMobile) {
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new Particle());
+        }
+
+        function drawLines() {
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < 100) {
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.strokeStyle = `rgba(37, 99, 235, ${1 - distance / 100})`;
+                        ctx.lineWidth = 1;
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+            drawLines();
+            requestAnimationFrame(animateParticles);
+        }
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
         });
-        drawLines();
-        requestAnimationFrame(animateParticles);
+
+        animateParticles();
     }
-
-    window.addEventListener('resize', () => {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-    });
-
-    animateParticles();
 }
 
 // Particle Animation (Existing)
@@ -177,31 +181,56 @@ const createParticle = () => {
         particle.remove();
     }, 3000);
 };
-setInterval(createParticle, 300);
+if (!isMobile) {
+    setInterval(createParticle, 300);
+}
 
 // Mobile Menu Toggle
 const mobileMenu = document.querySelector('.mobile-menu');
 const navLinksContainer = document.querySelector('.nav-links');
-mobileMenu.addEventListener('click', () => {
-    navLinksContainer.classList.toggle('active');
-    mobileMenu.classList.toggle('active');
-});
+if (mobileMenu && navLinksContainer) {
+    mobileMenu.addEventListener('click', () => {
+        const isActive = navLinksContainer.classList.toggle('active');
+        mobileMenu.classList.toggle('active');
+        mobileMenu.setAttribute('aria-expanded', isActive);
+    });
+
+    // Close menu when a link is clicked
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', () => {
+            navLinksContainer.classList.remove('active');
+            mobileMenu.classList.remove('active');
+            mobileMenu.setAttribute('aria-expanded', 'false');
+        });
+    });
+
+    // Close menu on outside click
+    document.addEventListener('click', (e) => {
+        if (!navLinksContainer.contains(e.target) && !mobileMenu.contains(e.target) && navLinksContainer.classList.contains('active')) {
+            navLinksContainer.classList.remove('active');
+            mobileMenu.classList.remove('active');
+            mobileMenu.setAttribute('aria-expanded', 'false');
+        }
+    });
+}
 
 // Back to Top Button
 const backToTop = document.querySelector('.back-to-top');
-window.addEventListener('scroll', () => {
-    if (window.pageYOffset > 300) {
-        backToTop.classList.add('visible');
-    } else {
-        backToTop.classList.remove('visible');
-    }
-});
-backToTop.addEventListener('click', () => {
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
+if (backToTop) {
+    window.addEventListener('scroll', () => {
+        if (window.pageYOffset > 300) {
+            backToTop.classList.add('visible');
+        } else {
+            backToTop.classList.remove('visible');
+        }
     });
-});
+    backToTop.addEventListener('click', () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+}
 
 // Project Card Hover Effects
 document.querySelectorAll('.project-card').forEach(card => {
@@ -249,7 +278,7 @@ document.querySelectorAll('.filter-btn').forEach(button => {
     button.addEventListener('click', () => {
         document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
         button.classList.add('active');
-        const filter = button.getAttribute('data-filter');
+        const filter = button.getAttribute('data-filter').toLowerCase();
         document.querySelectorAll('.project-card').forEach(card => {
             card.classList.remove('hidden');
             if (filter !== 'all' && !card.querySelector('.project-tech').innerHTML.toLowerCase().includes(filter)) {
@@ -275,94 +304,99 @@ document.querySelectorAll('.project-card').forEach(card => {
 
 // Theme Toggle
 const themeToggle = document.querySelector('.theme-toggle');
-themeToggle.addEventListener('click', () => {
-    document.documentElement.classList.toggle('light');
-    const isLight = document.documentElement.classList.contains('light');
-    themeToggle.innerHTML = `<i class="fas fa-${isLight ? 'sun' : 'moon'}"></i>`;
-    localStorage.setItem('theme', isLight ? 'light' : 'dark');
-});
-// Load saved theme
-if (localStorage.getItem('theme') === 'light') {
-    document.documentElement.classList.add('light');
-    themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+if (themeToggle) {
+    themeToggle.addEventListener('click', () => {
+        document.documentElement.classList.toggle('light');
+        const isLight = document.documentElement.classList.contains('light');
+        themeToggle.innerHTML = `<i class="fas fa-${isLight ? 'sun' : 'moon'}"></i>`;
+        localStorage.setItem('theme', isLight ? 'light' : 'dark');
+    });
+    // Load saved theme
+    if (localStorage.getItem('theme') === 'light') {
+        document.documentElement.classList.add('light');
+        themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+    }
 }
 
 // Form Validation and Submission
-document.querySelector('form.contact-form').addEventListener('submit', async function (e) {
-    e.preventDefault();
+const contactForm = document.querySelector('form.contact-form');
+if (contactForm) {
+    contactForm.addEventListener('submit', async function (e) {
+        e.preventDefault();
 
-    if (!this.elements.name || !this.elements.email || !this.elements.subject || !this.elements.message) {
         const button = this.querySelector('button[type="submit"]');
-        button.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Form fields missing';
-        button.style.background = '#ef4444';
-        setTimeout(() => {
-            button.innerHTML = '<i class="fas fa-paper-plane"></i> Send Message';
-            button.style.background = '';
-        }, 5000);
-        return;
-    }
+        const originalText = button.innerHTML;
 
-    const constraints = {
-        name: { presence: { allowEmpty: false }, format: { pattern: /^[A-Za-z .'-]+$/, message: 'must be a valid name' } },
-        email: { presence: { allowEmpty: false }, email: true },
-        subject: { presence: { allowEmpty: false }, length: { minimum: 5, message: 'must be at least 5 characters' } },
-        message: { presence: { allowEmpty: false }, length: { minimum: 10, message: 'must be at least 10 characters' } }
-    };
-
-    const formValues = {
-        name: this.elements.name.value,
-        email: this.elements.email.value,
-        subject: this.elements.subject.value,
-        message: this.elements.message.value
-    };
-
-    const errors = validate(formValues, constraints);
-    const button = this.querySelector('button[type="submit"]');
-    const originalText = button.innerHTML;
-
-    if (errors) {
-        const errorMessage = Object.values(errors).join('<br>');
-        button.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${errorMessage}`;
-        button.style.background = '#ef4444';
-        setTimeout(() => {
-            button.innerHTML = originalText;
-            button.disabled = false;
-            button.style.background = '';
-            button.style.cursor = '';
-        }, 5000);
-        return;
-    }
-
-    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
-    button.disabled = true;
-    button.style.background = '#6b7280';
-    button.style.cursor = 'not-allowed';
-
-    try {
-        const formData = new FormData(this);
-        const response = await fetch('https://api.web3forms.com/submit', {
-            method: 'POST',
-            body: formData
-        });
-
-        if (response.ok) {
-            window.location.href = './thanks.html';
-        } else {
-            throw new Error('Submission failed');
+        if (!this.elements.name || !this.elements.email || !this.elements.subject || !this.elements.message) {
+            button.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Form fields missing';
+            button.style.background = '#ef4444';
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.style.background = '';
+            }, 5000);
+            return;
         }
-    } catch (error) {
-        button.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Submission failed';
-        button.style.background = '#ef4444';
-        setTimeout(() => {
-            button.innerHTML = originalText;
-            button.disabled = false;
-            button.style.background = '';
-            button.style.cursor = '';
-        }, 5000);
-    }
-});
 
-// Ripple Effect for Social Links (Footer Only)
+        const constraints = {
+            name: { presence: { allowEmpty: false }, format: { pattern: /^[A-Za-z .'-]+$/, message: 'must be a valid name' } },
+            email: { presence: { allowEmpty: false }, email: true },
+            subject: { presence: { allowEmpty: false }, length: { minimum: 5, message: 'must be at least 5 characters' } },
+            message: { presence: { allowEmpty: false }, length: { minimum: 10, message: 'must be at least 10 characters' } }
+        };
+
+        const formValues = {
+            name: this.elements.name.value,
+            email: this.elements.email.value,
+            subject: this.elements.subject.value,
+            message: this.elements.message.value
+        };
+
+        const errors = validate(formValues, constraints);
+
+        if (errors) {
+            const errorMessage = Object.values(errors).join('<br>');
+            button.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${errorMessage}`;
+            button.style.background = '#ef4444';
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.disabled = false;
+                button.style.background = '';
+                button.style.cursor = '';
+            }, 5000);
+            return;
+        }
+
+        button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+        button.disabled = true;
+        button.style.background = '#6b7280';
+        button.style.cursor = 'not-allowed';
+
+        try {
+            const formData = new FormData(this);
+            const response = await fetch('https://api.web3forms.com/submit', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (response.ok) {
+                window.location.href = './thanks.html';
+            } else {
+                throw new Error('Submission failed');
+            }
+        } catch (error) {
+            button.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Submission failed';
+            button.style.background = '#ef4444';
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.disabled = false;
+                button.style.background = '';
+                button.style.cursor = '';
+            }, 5000);
+        }
+    });
+}
+
+// Ripple Effect for Social Links
 document.querySelectorAll('.social-link').forEach(link => {
     link.addEventListener('click', function (e) {
         const ripple = this.querySelector('.ripple');
@@ -373,3 +407,18 @@ document.querySelectorAll('.social-link').forEach(link => {
         ripple.style.animation = 'ripple 0.6s linear';
     });
 });
+
+// Keyboard Accessibility for Mobile Menu
+if (mobileMenu) {
+    mobileMenu.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            const isActive = navLinksContainer.classList.toggle('active');
+            mobileMenu.classList.toggle('active');
+            mobileMenu.setAttribute('aria-expanded', isActive);
+            if (isActive) {
+                navLinksContainer.querySelector('a').focus();
+            }
+        }
+    });
+}
