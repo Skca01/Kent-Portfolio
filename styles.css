@@ -93,7 +93,9 @@ body {
     font-size: 1.5rem;
     font-weight: 700;
     background: var(--gradient);
+    background-clip: text;
     -webkit-background-clip: text;
+    color: transparent;
     -webkit-text-fill-color: transparent;
 }
 
@@ -209,7 +211,9 @@ body {
     margin-bottom: 1rem;
     font-weight: 700;
     background: var(--gradient);
+    background-clip: text;
     -webkit-background-clip: text;
+    color: transparent;
     -webkit-text-fill-color: transparent;
     animation: fadeInUp 1s ease-out;
 }
@@ -372,7 +376,9 @@ body {
     margin-bottom: 3rem;
     font-weight: 700;
     background: var(--gradient);
+    background-clip: text;
     -webkit-background-clip: text;
+    color: transparent;
     -webkit-text-fill-color: transparent;
 }
 
@@ -417,8 +423,8 @@ body {
 .about-text .btn-primary {
     margin-top: 1.5rem;
     display: inline-block;
-
 }
+
 .stats {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -788,6 +794,30 @@ body {
     pointer-events: none;
 }
 
+/* Visitor Counter Styles */
+.visitor-counter {
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    justify-content: center;
+    background: var(--bg-card);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    color: var(--text-secondary);
+    font-size: 1rem;
+}
+
+.visitor-counter img {
+    height: 24px;
+    vertical-align: middle;
+    transition: opacity 0.3s ease;
+}
+
+.visitor-counter a:hover img {
+    opacity: 0.8;
+}
+
 /* Animations */
 @keyframes fadeInUp {
     from {
@@ -1028,6 +1058,15 @@ body {
         width: 44px;
         height: 44px;
         font-size: 1rem;
+    }
+
+    .visitor-counter {
+        font-size: 0.9rem;
+        padding: 0.4rem 0.8rem;
+    }
+
+    .visitor-counter img {
+        height: 20px;
     }
 }
 
