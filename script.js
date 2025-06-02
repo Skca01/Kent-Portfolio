@@ -327,45 +327,52 @@ if (contactForm) {
         const button = this.querySelector('button[type="submit"]');
         const originalText = button.innerHTML;
 
-        if (!this.elements.name || !this.elements.email || !this.elements.subject || !this.elements.message) {
-            button.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Form fields missing';
-            button.style.background = '#ef4444';
-            setTimeout(() => {
-                button.innerHTML = originalText;
-                button.style.background = '';
-            }, 5000);
-            return;
+        // Get form values
+        const name = this.elements.name?.value.trim();
+        const email = this.elements.email?.value.trim();
+        const subject = this.elements.subject?.value.trim();
+        const message = this.elements.message?.value.trim();
+
+        // Custom validation
+        let errors = [];
+
+        if (!name) {
+            errors.push('Name is required');
+        } else if (!/^[A-Za-z .'-]+$/.test(name)) {
+            errors.push('Name must contain only letters, spaces, or basic punctuation');
         }
 
-        const constraints = {
-            name: { presence: { allowEmpty: false }, format: { pattern: /^[A-Za-z .'-]+$/, message: 'must be a valid name' } },
-            email: { presence: { allowEmpty: false }, email: true },
-            subject: { presence: { allowEmpty: false }, length: { minimum: 5, message: 'must be at least 5 characters' } },
-            message: { presence: { allowEmpty: false }, length: { minimum: 10, message: 'must be at least 10 characters' } }
-        };
+        if (!email) {
+            errors.push('Email is required');
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            errors.push('Invalid email format');
+        }
 
-        const formValues = {
-            name: this.elements.name.value,
-            email: this.elements.email.value,
-            subject: this.elements.subject.value,
-            message: this.elements.message.value
-        };
+        if (!subject) {
+            errors.push('Subject is required');
+        } else if (subject.length < 5) {
+            errors.push('Subject must be at least 5 characters');
+        }
 
-        const errors = validate(formValues, constraints);
+        if (!message) {
+            errors.push('Message is required');
+        } else if (message.length < 10) {
+            errors.push('Message must be at least 10 characters');
+        }
 
-        if (errors) {
-            const errorMessage = Object.values(errors).join('<br>');
-            button.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${errorMessage}`;
+        // Display errors if any
+        if (errors.length > 0) {
+            button.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${errors.join('<br>')}`;
             button.style.background = '#ef4444';
             setTimeout(() => {
                 button.innerHTML = originalText;
-                button.disabled = false;
                 button.style.background = '';
                 button.style.cursor = '';
             }, 5000);
             return;
         }
 
+        // Proceed with form submission
         button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
         button.disabled = true;
         button.style.background = '#6b7280';
@@ -375,16 +382,17 @@ if (contactForm) {
             const formData = new FormData(this);
             const response = await fetch('https://api.web3forms.com/submit', {
                 method: 'POST',
-                body: formData
+                body: formData,
             });
 
             if (response.ok) {
                 window.location.href = './thanks.html';
             } else {
-                throw new Error('Submission failed');
+                throw new Error('Submission failed: ' + response.statusText);
             }
         } catch (error) {
-            button.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Submission failed';
+            console.error('Form submission error:', error);
+            button.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Failed to send message';
             button.style.background = '#ef4444';
             setTimeout(() => {
                 button.innerHTML = originalText;
@@ -403,7 +411,7 @@ document.querySelectorAll('.social-link').forEach(link => {
         ripple.style.left = `${e.offsetX}px`;
         ripple.style.top = `${e.offsetY}px`;
         ripple.style.animation = 'none';
-        ripple.offsetHeight; // Trigger reflow
+        ripple.offsetHeight;
         ripple.style.animation = 'ripple 0.6s linear';
     });
 });
@@ -420,5 +428,13 @@ if (mobileMenu) {
                 navLinksContainer.querySelector('a').focus();
             }
         }
+    });
+}
+
+// Visitor Counter Fallback
+const visitorCounterImg = document.getElementById('visitor-counter');
+if (visitorCounterImg) {
+    visitorCounterImg.addEventListener('error', () => {
+        visitorCounterImg.parentElement.parentElement.textContent = 'Visitors: N/A';
     });
 }
