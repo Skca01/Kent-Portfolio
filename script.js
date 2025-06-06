@@ -368,8 +368,10 @@ if (themeToggle) {
     }
 }
 
-// Form Validation
+// Contact Form Handler
 const contactForm = document.querySelector('form.contact-form');
+const resultDiv = document.getElementById('result');
+
 if (contactForm) {
     const formInputs = contactForm.querySelectorAll('input, textarea');
     
@@ -417,7 +419,6 @@ if (contactForm) {
                 break;
         }
 
-        // Update UI
         const errorElement = input.parentElement.querySelector('.error-message') || 
             (() => {
                 const el = document.createElement('span');
@@ -440,8 +441,10 @@ if (contactForm) {
 
     // Real-time validation
     formInputs.forEach(input => {
-        input.addEventListener('input', () => validateInput(input));
-        input.addEventListener('blur', () => validateInput(input));
+        if (input.type !== 'hidden' && input.type !== 'checkbox') {
+            input.addEventListener('input', () => validateInput(input));
+            input.addEventListener('blur', () => validateInput(input));
+        }
     });
 
     // Form submission
@@ -451,8 +454,10 @@ if (contactForm) {
         // Validate all fields
         let isFormValid = true;
         formInputs.forEach(input => {
-            if (!validateInput(input)) {
-                isFormValid = false;
+            if (input.type !== 'hidden' && input.type !== 'checkbox') {
+                if (!validateInput(input)) {
+                    isFormValid = false;
+                }
             }
         });
 
@@ -460,32 +465,51 @@ if (contactForm) {
             return;
         }
 
-        const button = this.querySelector('button[type="submit"]');
-        const originalText = button.innerHTML;
-        button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
-        button.disabled = true;
+        const submitButton = this.querySelector('button[type="submit"]');
+        const originalText = submitButton.innerHTML;
+        submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+        submitButton.disabled = true;
 
         try {
             const formData = new FormData(this);
             const response = await fetch('https://api.web3forms.com/submit', {
                 method: 'POST',
+                headers: {
+                    'Accept': 'application/json'
+                },
                 body: formData
             });
 
-            if (response.ok) {
-                window.location.href = './thanks.html';
+            const data = await response.json();
+            console.log('Form submission response:', data);
+
+            if (data.success) {
+                // Show success message and reset form
+                resultDiv.innerHTML = '<div class="success-message">Thank you! Your message has been sent successfully.</div>';
+                this.reset();
+                submitButton.innerHTML = '<i class="fas fa-check"></i> Sent Successfully!';
+                submitButton.style.backgroundColor = '#22c55e';
+                
+                // Redirect after a short delay
+                setTimeout(() => {
+                    window.location.href = 'thanks.html';
+                }, 1500);
             } else {
-                throw new Error('Submission failed');
+                throw new Error(data.message || 'Form submission failed');
             }
         } catch (error) {
             console.error('Form submission error:', error);
-            button.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Failed to send';
-            button.style.background = '#ef4444';
-            setTimeout(() => {
-                button.innerHTML = originalText;
-                button.disabled = false;
-                button.style.background = '';
-            }, 3000);
+            
+            let errorMessage = 'Failed to send message. ';
+            if (error.message.includes('Failed to fetch')) {
+                errorMessage += 'Please check your internet connection and try again.';
+            } else {
+                errorMessage += error.message || 'Please try again later.';
+            }
+            
+            resultDiv.innerHTML = `<div class="error-message">${errorMessage}</div>`;
+            submitButton.innerHTML = originalText;
+            submitButton.disabled = false;
         }
     });
 }
