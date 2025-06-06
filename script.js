@@ -403,18 +403,12 @@ if (contactForm) {
                 if (!value) {
                     isValid = false;
                     errorMessage = 'Subject is required';
-                } else if (value.length < 5) {
-                    isValid = false;
-                    errorMessage = 'Subject must be at least 5 characters';
                 }
                 break;
             case 'message':
                 if (!value) {
                     isValid = false;
                     errorMessage = 'Message is required';
-                } else if (value.length < 10) {
-                    isValid = false;
-                    errorMessage = 'Message must be at least 10 characters';
                 }
                 break;
         }
@@ -474,26 +468,19 @@ if (contactForm) {
             const formData = new FormData(this);
             const response = await fetch('https://api.web3forms.com/submit', {
                 method: 'POST',
-                headers: {
-                    'Accept': 'application/json'
-                },
                 body: formData
             });
 
             const data = await response.json();
-            console.log('Form submission response:', data);
 
             if (data.success) {
-                // Show success message and reset form
                 resultDiv.innerHTML = '<div class="success-message">Thank you! Your message has been sent successfully.</div>';
                 this.reset();
-                submitButton.innerHTML = '<i class="fas fa-check"></i> Sent Successfully!';
+                submitButton.innerHTML = '<i class="fas fa-check"></i> Sent!';
                 submitButton.style.backgroundColor = '#22c55e';
                 
-                // Redirect after a short delay
-                setTimeout(() => {
-                    window.location.href = 'thanks.html';
-                }, 1500);
+                // Redirect immediately
+                window.location.href = 'thanks.html';
             } else {
                 throw new Error(data.message || 'Form submission failed');
             }
