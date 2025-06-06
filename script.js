@@ -371,6 +371,16 @@ if (themeToggle) {
 // Contact Form Handler
 const contactForm = document.querySelector('form.contact-form');
 
+// Function to get the correct base URL
+function getBaseUrl() {
+    // Check if we're on GitHub Pages
+    if (window.location.hostname === 'skca01.github.io') {
+        return '/Kent-Portfolio/';
+    }
+    // Local environment
+    return '/';
+}
+
 if (contactForm) {
     const formInputs = contactForm.querySelectorAll('input, textarea');
     
@@ -471,8 +481,9 @@ if (contactForm) {
             const data = await response.json();
 
             if (data.success) {
-                // Redirect to thanks page immediately
-                window.location.href = 'thanks.html';
+                // Get the base URL and redirect
+                const baseUrl = getBaseUrl();
+                window.location.href = `${baseUrl}thanks.html`;
             } else {
                 throw new Error(data.message || 'Form submission failed');
             }
