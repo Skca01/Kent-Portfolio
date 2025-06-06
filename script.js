@@ -370,7 +370,6 @@ if (themeToggle) {
 
 // Contact Form Handler
 const contactForm = document.querySelector('form.contact-form');
-const resultDiv = document.getElementById('result');
 
 if (contactForm) {
     const formInputs = contactForm.querySelectorAll('input, textarea');
@@ -444,8 +443,7 @@ if (contactForm) {
     // Form submission
     contactForm.addEventListener('submit', async function(e) {
         e.preventDefault();
-
-        // Validate all fields
+        
         let isFormValid = true;
         formInputs.forEach(input => {
             if (input.type !== 'hidden' && input.type !== 'checkbox') {
@@ -460,7 +458,6 @@ if (contactForm) {
         }
 
         const submitButton = this.querySelector('button[type="submit"]');
-        const originalText = submitButton.innerHTML;
         submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
         submitButton.disabled = true;
 
@@ -474,28 +471,15 @@ if (contactForm) {
             const data = await response.json();
 
             if (data.success) {
-                resultDiv.innerHTML = '<div class="success-message">Thank you! Your message has been sent successfully.</div>';
-                this.reset();
-                submitButton.innerHTML = '<i class="fas fa-check"></i> Sent!';
-                submitButton.style.backgroundColor = '#22c55e';
-                
-                // Redirect immediately
+                // Redirect to thanks page immediately
                 window.location.href = 'thanks.html';
             } else {
                 throw new Error(data.message || 'Form submission failed');
             }
         } catch (error) {
             console.error('Form submission error:', error);
-            
-            let errorMessage = 'Failed to send message. ';
-            if (error.message.includes('Failed to fetch')) {
-                errorMessage += 'Please check your internet connection and try again.';
-            } else {
-                errorMessage += error.message || 'Please try again later.';
-            }
-            
-            resultDiv.innerHTML = `<div class="error-message">${errorMessage}</div>`;
-            submitButton.innerHTML = originalText;
+            alert('Failed to send message. Please try again.');
+            submitButton.innerHTML = '<i class="fas fa-paper-plane"></i> Send Message';
             submitButton.disabled = false;
         }
     });
