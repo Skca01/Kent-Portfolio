@@ -1,3 +1,13 @@
+/**
+ * Kent Carlo B. Amante Portfolio - Scripts
+ * 
+ * @author: Kent Carlo B. Amante
+ * @email: carloamante125@gmail.com
+ * @github: https://github.com/Skca01
+ * @description: Main JavaScript functionality for personal portfolio website
+ * @copyright: © 2025 Kent Carlo B. Amante. All rights reserved.
+ */
+
 // Smooth Scrolling
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
@@ -274,19 +284,59 @@ skillItems.forEach(item => {
 });
 
 // Project Filters
-document.querySelectorAll('.filter-btn').forEach(button => {
+const filterButtons = document.querySelectorAll('.filter-btn');
+const projectCards = document.querySelectorAll('.project-card');
+
+function filterProjects(filter) {
+    projectCards.forEach(card => {
+        // Get all technology tags from the card
+        const techTags = card.querySelectorAll('.tech-tag');
+        const techList = Array.from(techTags).map(tag => tag.textContent.toLowerCase());
+        
+        // Get project title for ESP32 check
+        const projectTitle = card.querySelector('.project-title').textContent.toLowerCase();
+        
+        // Show all projects if filter is 'all'
+        if (filter === 'all') {
+            card.style.display = 'block';
+            return;
+        }
+
+        // Special handling for ESP32 filter
+        if (filter === 'esp32' && projectTitle.includes('esp32')) {
+            card.style.display = 'block';
+            return;
+        }
+
+        // Check if any of the tech tags match the filter
+        const matchesFilter = techList.some(tech => tech.toLowerCase().includes(filter.toLowerCase()));
+        card.style.display = matchesFilter ? 'block' : 'none';
+    });
+}
+
+// Add click event listeners to filter buttons
+filterButtons.forEach(button => {
     button.addEventListener('click', () => {
-        document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+        // Remove active class from all buttons
+        filterButtons.forEach(btn => btn.classList.remove('active'));
+        // Add active class to clicked button
         button.classList.add('active');
+        // Get filter value and apply filtering
         const filter = button.getAttribute('data-filter').toLowerCase();
-        document.querySelectorAll('.project-card').forEach(card => {
-            card.classList.remove('hidden');
-            if (filter !== 'all' && !card.querySelector('.project-tech').innerHTML.toLowerCase().includes(filter)) {
-                card.classList.add('hidden');
+        filterProjects(filter);
+        
+        // Trigger layout animations
+        projectCards.forEach(card => {
+            if (card.style.display !== 'none') {
+                card.classList.add('fade-in');
+                setTimeout(() => card.classList.remove('fade-in'), 500);
             }
         });
     });
 });
+
+// Initialize with 'all' filter
+filterProjects('all');
 
 // Project Card Entrance Animation
 const projectObserver = new IntersectionObserver((entries) => {
@@ -318,88 +368,124 @@ if (themeToggle) {
     }
 }
 
-// Form Validation and Submission
+// Form Validation
 const contactForm = document.querySelector('form.contact-form');
 if (contactForm) {
-    contactForm.addEventListener('submit', async function (e) {
+    const formInputs = contactForm.querySelectorAll('input, textarea');
+    
+    const validateInput = (input) => {
+        const value = input.value.trim();
+        let isValid = true;
+        let errorMessage = '';
+
+        switch(input.id) {
+            case 'name':
+                if (!value) {
+                    isValid = false;
+                    errorMessage = 'Name is required';
+                } else if (!/^[A-Za-z .'-]+$/.test(value)) {
+                    isValid = false;
+                    errorMessage = 'Name must contain only letters, spaces, or basic punctuation';
+                }
+                break;
+            case 'email':
+                if (!value) {
+                    isValid = false;
+                    errorMessage = 'Email is required';
+                } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+                    isValid = false;
+                    errorMessage = 'Please enter a valid email address';
+                }
+                break;
+            case 'subject':
+                if (!value) {
+                    isValid = false;
+                    errorMessage = 'Subject is required';
+                } else if (value.length < 5) {
+                    isValid = false;
+                    errorMessage = 'Subject must be at least 5 characters';
+                }
+                break;
+            case 'message':
+                if (!value) {
+                    isValid = false;
+                    errorMessage = 'Message is required';
+                } else if (value.length < 10) {
+                    isValid = false;
+                    errorMessage = 'Message must be at least 10 characters';
+                }
+                break;
+        }
+
+        // Update UI
+        const errorElement = input.parentElement.querySelector('.error-message') || 
+            (() => {
+                const el = document.createElement('span');
+                el.className = 'error-message';
+                input.parentElement.appendChild(el);
+                return el;
+            })();
+
+        if (!isValid) {
+            input.classList.add('invalid');
+            errorElement.textContent = errorMessage;
+            errorElement.style.display = 'block';
+        } else {
+            input.classList.remove('invalid');
+            errorElement.style.display = 'none';
+        }
+
+        return isValid;
+    };
+
+    // Real-time validation
+    formInputs.forEach(input => {
+        input.addEventListener('input', () => validateInput(input));
+        input.addEventListener('blur', () => validateInput(input));
+    });
+
+    // Form submission
+    contactForm.addEventListener('submit', async function(e) {
         e.preventDefault();
 
-        const button = this.querySelector('button[type="submit"]');
-        const originalText = button.innerHTML;
+        // Validate all fields
+        let isFormValid = true;
+        formInputs.forEach(input => {
+            if (!validateInput(input)) {
+                isFormValid = false;
+            }
+        });
 
-        // Get form values
-        const name = this.elements.name?.value.trim();
-        const email = this.elements.email?.value.trim();
-        const subject = this.elements.subject?.value.trim();
-        const message = this.elements.message?.value.trim();
-
-        // Custom validation
-        let errors = [];
-
-        if (!name) {
-            errors.push('Name is required');
-        } else if (!/^[A-Za-z .'-]+$/.test(name)) {
-            errors.push('Name must contain only letters, spaces, or basic punctuation');
-        }
-
-        if (!email) {
-            errors.push('Email is required');
-        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-            errors.push('Invalid email format');
-        }
-
-        if (!subject) {
-            errors.push('Subject is required');
-        } else if (subject.length < 5) {
-            errors.push('Subject must be at least 5 characters');
-        }
-
-        if (!message) {
-            errors.push('Message is required');
-        } else if (message.length < 10) {
-            errors.push('Message must be at least 10 characters');
-        }
-
-        // Display errors if any
-        if (errors.length > 0) {
-            button.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${errors.join('<br>')}`;
-            button.style.background = '#ef4444';
-            setTimeout(() => {
-                button.innerHTML = originalText;
-                button.style.background = '';
-                button.style.cursor = '';
-            }, 5000);
+        if (!isFormValid) {
             return;
         }
 
-        // Proceed with form submission
+        const button = this.querySelector('button[type="submit"]');
+        const originalText = button.innerHTML;
         button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
         button.disabled = true;
-        button.style.background = '#6b7280';
-        button.style.cursor = 'not-allowed';
 
         try {
             const formData = new FormData(this);
             const response = await fetch('https://api.web3forms.com/submit', {
                 method: 'POST',
-                body: formData,
+                body: formData
             });
 
             if (response.ok) {
                 window.location.href = './thanks.html';
             } else {
-                throw new Error('Submission failed: ' + response.statusText);
+                throw new Error('Submission failed');
             }
         } catch (error) {
             console.error('Form submission error:', error);
-            button.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Failed to send message';
+            button.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Failed to send';
             button.style.background = '#ef4444';
             setTimeout(() => {
                 button.innerHTML = originalText;
                 button.disabled = false;
                 button.style.background = '';
-                button.style.cursor = '';
-            }, 5000);
+            }, 3000);
         }
     });
 }
@@ -438,3 +524,55 @@ if (visitorCounterImg) {
         visitorCounterImg.parentElement.parentElement.textContent = 'Visitors: N/A';
     });
 }
+
+// Resume Download Handler
+const resumeButton = document.querySelector('a[href="resume.pdf"]');
+if (resumeButton) {
+    resumeButton.addEventListener('click', function(e) {
+        const originalText = this.innerHTML;
+        this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Downloading...';
+        setTimeout(() => {
+            this.innerHTML = originalText;
+        }, 2000);
+    });
+}
+
+// Service Worker Registration
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+            .then(registration => {
+                console.log('ServiceWorker registration successful');
+            })
+            .catch(err => {
+                console.log('ServiceWorker registration failed: ', err);
+            });
+    });
+}
+
+// Cookie Consent Handler
+const cookieConsent = document.getElementById('cookieConsent');
+const acceptCookies = document.getElementById('acceptCookies');
+const declineCookies = document.getElementById('declineCookies');
+
+const COOKIE_CONSENT_KEY = 'cookie-consent-status';
+
+// Check if user has already made a choice
+const cookieChoice = localStorage.getItem(COOKIE_CONSENT_KEY);
+if (!cookieChoice) {
+    setTimeout(() => {
+        cookieConsent.classList.add('show');
+    }, 2000);
+}
+
+acceptCookies.addEventListener('click', () => {
+    localStorage.setItem(COOKIE_CONSENT_KEY, 'accepted');
+    cookieConsent.classList.remove('show');
+    // Enable analytics or other cookie-dependent features here
+});
+
+declineCookies.addEventListener('click', () => {
+    localStorage.setItem(COOKIE_CONSENT_KEY, 'declined');
+    cookieConsent.classList.remove('show');
+    // Disable analytics or other cookie-dependent features here
+});
