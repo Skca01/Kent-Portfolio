@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thank You | Kent Carlo B. Amante</title>
+    <title>Thank You! - Kent Carlo B. Amante</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         .thanks-container {
             min-height: 100vh;
@@ -17,38 +17,85 @@
             padding: 2rem;
             background: var(--bg-primary);
             color: var(--text-primary);
+            animation: fadeIn 0.5s ease-out;
         }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes checkmark {
+            from {
+                transform: scale(0);
+            }
+            to {
+                transform: scale(1);
+            }
+        }
+
         .thanks-icon {
-            font-size: 4rem;
-            color: var(--primary);
+            font-size: 5rem;
+            color: #22c55e;
             margin-bottom: 2rem;
-            animation: bounce 2s infinite;
+            animation: checkmark 0.5s cubic-bezier(0.65, 0, 0.45, 1) 0.2s both;
         }
+
         .thanks-title {
             font-size: 2.5rem;
             margin-bottom: 1rem;
-            color: var(--text-primary);
+            color: var(--primary);
         }
+
         .thanks-message {
             font-size: 1.2rem;
             margin-bottom: 2rem;
+            max-width: 600px;
+            line-height: 1.6;
             color: var(--text-secondary);
         }
+
         .home-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
             padding: 1rem 2rem;
+            font-size: 1.1rem;
+            border-radius: 8px;
             background: var(--primary);
             color: white;
-            border-radius: 8px;
             text-decoration: none;
             transition: all 0.3s ease;
+            border: 2px solid var(--primary);
         }
+
         .home-button:hover {
+            background: transparent;
+            color: var(--primary);
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
+
+        .particle {
+            position: absolute;
+            pointer-events: none;
+            opacity: 0.6;
+            animation: float 3s infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
         }
     </style>
 </head>
@@ -56,26 +103,43 @@
     <div class="thanks-container">
         <i class="fas fa-check-circle thanks-icon"></i>
         <h1 class="thanks-title">Thank You!</h1>
-        <p class="thanks-message">Your message has been sent successfully. I'll get back to you soon!</p>
-        <a href="#" class="home-button" id="homeButton">
-            <i class="fas fa-home"></i> Back to Home
+        <p class="thanks-message">Your message has been sent successfully. I appreciate you taking the time to reach out and will get back to you as soon as possible.</p>
+        <a href="index.html" class="home-button">
+            <i class="fas fa-home"></i>
+            Back to Portfolio
         </a>
     </div>
+
     <script>
-        function getBaseUrl() {
-            if (window.location.hostname === 'skca01.github.io') {
-                return '/Kent-Portfolio/';
-            }
-            return '/';
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.cssText = `
+                position: absolute;
+                width: 4px;
+                height: 4px;
+                background: var(--primary);
+                border-radius: 50%;
+                left: ${Math.random() * 100}vw;
+                top: ${Math.random() * 100}vh;
+                opacity: ${Math.random() * 0.5 + 0.3};
+                pointer-events: none;
+            `;
+            document.body.appendChild(particle);
+            
+            setTimeout(() => {
+                particle.remove();
+            }, 3000);
         }
 
-        const homeButton = document.getElementById('homeButton');
-        const baseUrl = getBaseUrl();
-        homeButton.href = `${baseUrl}index.html`;
+        setInterval(createParticle, 300);
 
-        setTimeout(() => {
-            window.location.href = `${baseUrl}index.html`;
-        }, 2000);
+        function applyTheme() {
+            const theme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.classList.toggle('light', theme === 'light');
+        }
+
+        applyTheme();
     </script>
 </body>
-</html>
+</html> 
