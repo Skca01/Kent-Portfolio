@@ -8,25 +8,24 @@
  * @copyright: © 2025 Kent Carlo B. Amante. All rights reserved.
  */
 
-const CACHE_NAME = 'portfolio-v1';
-const ASSETS_TO_CACHE = [
-    '/',
-    '/index.html',
-    '/styles.css',
-    '/script.js',
-    '/kent.jpg',
-    '/resume.pdf',
-    'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css'
+// Service Worker
+const CACHE_NAME = 'kca-portfolio-v1';
+const urlsToCache = [
+  '.',
+  'index.html',
+  'styles.css',
+  'script.js',
+  'manifest.json',
+  'kent.jpg',
+  'thanks.html'
 ];
 
 // Install Service Worker
-self.addEventListener('install', (event) => {
-    event.waitUntil(
-        caches.open(CACHE_NAME)
-            .then((cache) => {
-                return cache.addAll(ASSETS_TO_CACHE);
-            })
-    );
+self.addEventListener('install', event => {
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then(cache => cache.addAll(urlsToCache))
+  );
 });
 
 // Activate Service Worker
@@ -45,28 +44,9 @@ self.addEventListener('activate', (event) => {
 });
 
 // Fetch Event Strategy (Cache First, then Network)
-self.addEventListener('fetch', (event) => {
-    event.respondWith(
-        caches.match(event.request)
-            .then((response) => {
-                if (response) {
-                    return response;
-                }
-                return fetch(event.request)
-                    .then((response) => {
-                        // Don't cache if not a success response
-                        if (!response || response.status !== 200 || response.type !== 'basic') {
-                            return response;
-                        }
-                        
-                        const responseToCache = response.clone();
-                        caches.open(CACHE_NAME)
-                            .then((cache) => {
-                                cache.put(event.request, responseToCache);
-                            });
-                        
-                        return response;
-                    });
-            })
-    );
+self.addEventListener('fetch', event => {
+  event.respondWith(
+    caches.match(event.request)
+      .then(response => response || fetch(event.request))
+  );
 }); 
