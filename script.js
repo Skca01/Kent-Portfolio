@@ -382,94 +382,55 @@ function getBaseUrl() {
 }
 
 if (contactForm) {
-    const formInputs = contactForm.querySelectorAll('input, textarea');
-    
-    const validateInput = (input) => {
-        const value = input.value.trim();
-        let isValid = true;
-        let errorMessage = '';
-
-        switch(input.id) {
-            case 'name':
-                if (!value) {
-                    isValid = false;
-                    errorMessage = 'Name is required';
-                } else if (!/^[A-Za-z .'-]+$/.test(value)) {
-                    isValid = false;
-                    errorMessage = 'Name must contain only letters, spaces, or basic punctuation';
-                }
-                break;
-            case 'email':
-                if (!value) {
-                    isValid = false;
-                    errorMessage = 'Email is required';
-                } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-                    isValid = false;
-                    errorMessage = 'Please enter a valid email address';
-                }
-                break;
-            case 'subject':
-                if (!value) {
-                    isValid = false;
-                    errorMessage = 'Subject is required';
-                }
-                break;
-            case 'message':
-                if (!value) {
-                    isValid = false;
-                    errorMessage = 'Message is required';
-                }
-                break;
-        }
-
-        const errorElement = input.parentElement.querySelector('.error-message') || 
-            (() => {
-                const el = document.createElement('span');
-                el.className = 'error-message';
-                input.parentElement.appendChild(el);
-                return el;
-            })();
-
-        if (!isValid) {
-            input.classList.add('invalid');
-            errorElement.textContent = errorMessage;
-            errorElement.style.display = 'block';
-        } else {
-            input.classList.remove('invalid');
-            errorElement.style.display = 'none';
-        }
-
-        return isValid;
-    };
-
-    // Real-time validation
-    formInputs.forEach(input => {
-        if (input.type !== 'hidden' && input.type !== 'checkbox') {
-            input.addEventListener('input', () => validateInput(input));
-            input.addEventListener('blur', () => validateInput(input));
-        }
-    });
-
-    // Form submission
-    contactForm.addEventListener('submit', async function(e) {
+    contactForm.addEventListener('submit', async function (e) {
         e.preventDefault();
-        
-        let isFormValid = true;
-        formInputs.forEach(input => {
-            if (input.type !== 'hidden' && input.type !== 'checkbox') {
-                if (!validateInput(input)) {
-                    isFormValid = false;
-                }
-            }
-        });
 
-        if (!isFormValid) {
+        const button = this.querySelector('button[type="submit"]');
+        const originalText = button.innerHTML;
+
+        if (!this.elements.name || !this.elements.email || !this.elements.subject || !this.elements.message) {
+            button.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Form fields missing';
+            button.style.background = '#ef4444';
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.style.background = '';
+            }, 5000);
             return;
         }
 
-        const submitButton = this.querySelector('button[type="submit"]');
-        submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
-        submitButton.disabled = true;
+        const constraints = {
+            name: { presence: { allowEmpty: false }, format: { pattern: /^[A-Za-z .'-]+$/, message: 'must be a valid name' } },
+            email: { presence: { allowEmpty: false }, email: true },
+            subject: { presence: { allowEmpty: false }, length: { minimum: 5, message: 'must be at least 5 characters' } },
+            message: { presence: { allowEmpty: false }, length: { minimum: 10, message: 'must be at least 10 characters' } }
+        };
+
+        const formValues = {
+            name: this.elements.name.value,
+            email: this.elements.email.value,
+            subject: this.elements.subject.value,
+            message: this.elements.message.value
+        };
+
+        const errors = validate(formValues, constraints);
+
+        if (errors) {
+            const errorMessage = Object.values(errors).join('<br>');
+            button.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${errorMessage}`;
+            button.style.background = '#ef4444';
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.disabled = false;
+                button.style.background = '';
+                button.style.cursor = '';
+            }, 5000);
+            return;
+        }
+
+        button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+        button.disabled = true;
+        button.style.background = '#6b7280';
+        button.style.cursor = 'not-allowed';
 
         try {
             const formData = new FormData(this);
@@ -478,20 +439,20 @@ if (contactForm) {
                 body: formData
             });
 
-            const data = await response.json();
-
-            if (data.success) {
-                // Get the base URL and redirect
-                const baseUrl = getBaseUrl();
-                window.location.href = `${baseUrl}thanks.html`;
+            if (response.ok) {
+                window.location.href = './thanks.html';
             } else {
-                throw new Error(data.message || 'Form submission failed');
+                throw new Error('Submission failed');
             }
         } catch (error) {
-            console.error('Form submission error:', error);
-            alert('Failed to send message. Please try again.');
-            submitButton.innerHTML = '<i class="fas fa-paper-plane"></i> Send Message';
-            submitButton.disabled = false;
+            button.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Submission failed';
+            button.style.background = '#ef4444';
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.disabled = false;
+                button.style.background = '';
+                button.style.cursor = '';
+            }, 5000);
         }
     });
 }
@@ -546,7 +507,7 @@ if (resumeButton) {
 // Service Worker Registration
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js')
+        navigator.serviceWorker.register('sw.js')
             .then(registration => {
                 console.log('ServiceWorker registration successful');
             })
