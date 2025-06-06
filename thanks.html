@@ -57,13 +57,24 @@
         <i class="fas fa-check-circle thanks-icon"></i>
         <h1 class="thanks-title">Thank You!</h1>
         <p class="thanks-message">Your message has been sent successfully. I'll get back to you soon!</p>
-        <a href="index.html" class="home-button">
+        <a href="#" class="home-button" id="homeButton">
             <i class="fas fa-home"></i> Back to Home
         </a>
     </div>
     <script>
+        function getBaseUrl() {
+            if (window.location.hostname === 'skca01.github.io') {
+                return '/Kent-Portfolio/';
+            }
+            return '/';
+        }
+
+        const homeButton = document.getElementById('homeButton');
+        const baseUrl = getBaseUrl();
+        homeButton.href = `${baseUrl}index.html`;
+
         setTimeout(() => {
-            window.location.href = 'index.html';
+            window.location.href = `${baseUrl}index.html`;
         }, 2000);
     </script>
 </body>
