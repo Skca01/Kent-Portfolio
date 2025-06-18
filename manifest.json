@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 {
     "name": "Kent Carlo B. Amante Portfolio",
     "short_name": "KCA Portfolio",
@@ -14,21 +13,4 @@
             "type": "image/x-icon"
         }
     ]
-=======
-{
-    "name": "Kent Carlo B. Amante Portfolio",
-    "short_name": "KCA Portfolio",
-    "description": "Portfolio website of Kent Carlo B. Amante - Electronics Engineering Graduate and Software Engineer",
-    "start_url": "/",
-    "display": "standalone",
-    "background_color": "#0f172a",
-    "theme_color": "#2563eb",
-    "icons": [
-        {
-            "src": "favicon.ico",
-            "sizes": "64x64",
-            "type": "image/x-icon"
-        }
-    ]
->>>>>>> ded355adb829069656590118c2e835b854c5acad
 } 
